@@ -155,10 +155,10 @@ with tab6:
     
     # पांडास डिक्शनरी की पूरी तरह फिक्स की गई कोडिंग लिस्ट
     log_data = pd.DataFrame({
-        "Iteration":,
-        "Objective Function (Endurance)": [3.10, 3.85, 4.22, 4.48, 4.62],
-        "Weight Constraint Delta (kg)": [140.2, 55.4, 12.1, 0.5, 0.0],
-        "Optimizer Status": ["ITERATING", "ITERATING", "ITERATING", "CONVERGING", "CONVERGED / SUCCESS"]
+        "Iteration",
+        "Objective Function (Endurance)" [3.10, 3.85, 4.22, 4.48, 4.62],
+        "Weight Constraint Delta (kg)" [140.2, 55.4, 12.1, 0.5, 0.0],
+        "Optimizer Status" ["ITERATING", "ITERATING", "ITERATING", "CONVERGING", "CONVERGED / SUCCESS"]
     })
     st.dataframe(log_data, use_container_width=True)
     st.success("🤖 Mathematical optimization loop successfully stabilized. System is ready for evaluation.")
