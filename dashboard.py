@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-# पेज सेटअप (फुल वाइड और एयरोस्पेस थीम)
+# 1. पेज सेटअप (Profesional Wide Layout)
 st.set_page_config(page_title="HAL-AeroTHON Ultimate UAV Twin", layout="wide")
 
 # मुख्य हेडर और टीम क्रेडिट्स
@@ -10,7 +10,7 @@ st.title("🛸 HAL-AeroTHON 2026: Tactical UAV Sizing & Trajectory Optimization 
 st.write("🧑‍💻 **Team Leader:** Vishal | **Propulsion System Architect:** Vansh Prajapati")
 st.markdown("---")
 
-# लेफ्ट साइडबार - कंट्रोलर्स
+# 2. लेफ्ट साइडबार - लाइव कंट्रोल्स (Sliders)
 st.sidebar.header("🎯 Mission Configuration")
 altitude = st.sidebar.slider("Operational Altitude (km)", 3.0, 10.0, 6.0, 0.5)
 speed = st.sidebar.slider("Target Cruise Speed (km/h)", 200, 300, 250, 5)
@@ -19,20 +19,20 @@ payload = st.sidebar.slider("Surveillance Payload Mass (kg)", 150, 250, 200, 5)
 st.sidebar.header("🔋 Energy Storage Matrix")
 battery_mass = st.sidebar.slider("Lithium Pack Mass (kg)", 50, 250, 160, 5)
 
-# ================= CONSTANTS & AEROSPACE MATH =================
-MTOW_LIMIT = 1000.0       # kg
-ENGINE_RATED_KW = 60.0    # kW
+# ================= 3. एयरोस्पेस गणितीय मॉडल =================
+MTOW_LIMIT = 1000.0       # kg (नियम के अनुसार)
+ENGINE_RATED_KW = 60.0    # kW (Fixed Turboshaft Core)
 GRAVITY = 9.81            
-L_OVER_D = 15.0           
+L_OVER_D = 15.0           # Lift-to-Drag Ratio
 
-# Sizing Calculations
-airframe_mass = MTOW_LIMIT * 0.35  
-engine_mass = 55.0                 
+# वजन का बंटवारा (Mass Ledger)
+airframe_mass = MTOW_LIMIT * 0.35  # 350 kg ढांचा
+engine_mass = 55.0                 # इंजन + जनरेटर का वजन
 fixed_mass = airframe_mass + engine_mass + payload
 fuel_mass = MTOW_LIMIT - fixed_mass - battery_mass
 total_current_mass = fixed_mass + battery_mass + max(0.0, fuel_mass)
 
-# ================= 6-TAB MULTI-PAGE SYSTEM =================
+# ================= 4. छह प्रोफेशनल ऑप्शंस (6-TAB MULTI-PAGE) =================
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📋 Executive Mission Overview", 
     "📊 Dynamic Mission Simulation & Power Split", 
@@ -68,6 +68,7 @@ with tab2:
     if fuel_mass < 0:
         st.error(f"⚠️ Design Space Infeasible: System is overweight by {abs(fuel_mass):.1f} kg. Reduce component weights in the sidebar.")
     else:
+        # ऊंचाई के हिसाब से हवा का घनत्व (Air Density Drop)
         rho = 1.225 * np.exp(-altitude / 8.5)
         v_mps = speed / 3.6
         thrust_req = (total_current_mass * GRAVITY) / L_OVER_D
@@ -88,6 +89,7 @@ with tab2:
         st.markdown("---")
         st.markdown("#### 📊 Dynamic Multi-Energy Depletion Curve (Real-Time Simulation)")
         
+        # तगड़ा ग्राफ नंबर 1: ईंधन और बैटरी का घटना
         t_steps = np.linspace(0, max(1.0, endurance_hours), 50)
         fuel_curve = [max(0.0, fuel_mass - (t * (power_mech_kw * 0.25))) for t in t_steps]
         soc_curve = [max(20.0, 100.0 - (t * 12.5)) for t in t_steps]
@@ -106,6 +108,7 @@ with tab3:
     st.markdown("### 📈 Altitude vs Velocity Design Space Trade-off")
     st.write("This dynamic graph maps how fuel consumption increases with air density changes across different velocity constraints.")
     
+    # तगड़ा ग्राफ नंबर 2: एल्टीट्यूड पेनल्टी
     alt_range = np.linspace(3.0, 10.0, 20)
     drag_at_low_alt = [42.0 * (1.5 - (a / 20.0)) for a in alt_range]
     drag_at_high_alt = [42.0 * (0.8 + (a / 20.0)) for a in alt_range]
@@ -124,6 +127,7 @@ with tab4:
     st.markdown("### ⚖️ Structural Weight Distribution Ledger")
     st.write("Real-time mass ledger tracking structural safety limits against the 1000 kg boundary condition.")
     
+    # प्रोग्रेस बार इंडिकेटर
     st.progress(min(1.0, total_current_mass / MTOW_LIMIT))
     st.write(f"**Current Structural Allocation:** {total_current_mass:.1f} kg / {MTOW_LIMIT} kg Limit ({(total_current_mass/MTOW_LIMIT)*100:.1f}% Capacity utilized)")
     
@@ -149,6 +153,7 @@ with tab6:
     st.markdown("### 📜 Algorithm Execution & SLSQP Convergence Status")
     st.write("Real-time telemetry showing mathematical solver iterations for range maximization.")
     
+    # पांडास डिक्शनरी की पूरी तरह फिक्स की गई कोडिंग लिस्ट
     log_data = pd.DataFrame({
         "Iteration":,
         "Objective Function (Endurance)": [3.10, 3.85, 4.22, 4.48, 4.62],
@@ -157,5 +162,4 @@ with tab6:
     })
     st.dataframe(log_data, use_container_width=True)
     st.success("🤖 Mathematical optimization loop successfully stabilized. System is ready for evaluation.")
-
 
