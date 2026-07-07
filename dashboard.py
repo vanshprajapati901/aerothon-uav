@@ -150,7 +150,7 @@ with tab6:
     st.write("Real-time telemetry showing mathematical solver iterations for range maximization.")
     
     log_data = pd.DataFrame({
-        "Iteration":,
+        "Iteration",
         "Objective Function (Endurance)": [3.10, 3.85, 4.22, 4.48, 4.62],
         "Weight Constraint Delta (kg)": [140.2, 55.4, 12.1, 0.5, 0.0],
         "Optimizer Status": ["ITERATING", "ITERATING", "ITERATING", "CONVERGING", "CONVERGED / SUCCESS"]
