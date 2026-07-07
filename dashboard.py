@@ -154,12 +154,13 @@ with tab6:
     st.write("Real-time telemetry showing mathematical solver iterations for range maximization.")
     
     # पांडास डिक्शनरी की पूरी तरह फिक्स की गई कोडिंग लिस्ट
-  log_data = pd.DataFrame({
+  log_data = pd.DataFrame(  {
     "Iteration": [1, 2, 3, 4, 5],
     "Objective Function (Endurance)": [3.10, 3.85, 4.22, 4.48, 4.62],
     "Weight Constraint Delta (kg)": [140.2, 55.4, 12.1, 0.5, 0.0],
     "Optimizer Status": ["ITERATING", "ITERATING", "ITERATING", "CONVERGING", "CONVERGED / SUCCESS"]
-})
+}  
+)
 
 st.dataframe(log_data, use_container_width=True)
 
